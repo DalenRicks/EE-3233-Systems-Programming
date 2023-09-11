@@ -1,0 +1,42 @@
+#!/bin/sh
+chmod +x script.sh
+
+echo "Making big-directory"
+mkdir big-directory
+
+echo "Making small-directory"
+mkdir big-directory/small-directory
+
+echo "Making file-1"
+touch big-directory/small-directory/file-1.txt
+
+cd big-directory/small-directory
+
+echo "Writing to file-1"
+echo "Dalen Ricks" > file-1.txt
+
+seq 1 1 20 >> file-1.txt
+
+cat file-1.txt
+
+wc -w <file-1.txt>>file-2.txt
+
+echo "file-1 contents"
+cat file-1.txt
+
+echo "file-2 contents"
+cat file-2.txt
+cp file-1.txt ../file-1.txt
+
+cd ..
+
+mv file-1.txt file-3.txt
+
+rm -r small-directory
+
+ls -l
+ls -a
+
+cd ..
+
+rm -r big-directory
