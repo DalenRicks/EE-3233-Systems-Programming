@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+
+#Dalen Ricks
+import math
+
+#approved functions for UI and calculator operations
+appr_op = {'exit','e','help','add','sub','mult','div', 'pwr', 'sqrt'}
+
+#calculator function that takes a function type and 2 operands
+def calculator(function :str, operand1 :int, operand2 :int) -> int:
+    #Case statements for operations
+    match function:
+        #Adds operand 1 and 2
+        case 'add':
+            result = operand1 + operand2
+
+        #Subtracts operand 1 and 2
+        case 'sub':  
+            result = operand1 - operand2
+
+        #Multiplies operand 1 and 2
+        case 'mult':
+            result = operand1 * operand2
+
+        #Divides operand 1 and 2
+        case 'div':
+            result = operand1 / operand2
+
+        #Raises operand 1 to the power of operand 2
+        case 'pwr':
+            result = pow(operand1,operand2)
+
+    #Returns result of operation at the end of the function
+    return result
+        
+    
+while(1):
+    #request operation
+    op = input("Give an operation, or type 'help'\n")
+
+    #Ensure the request is readable by forcing lowercase to match approved list
+    op = op.lower()
+
+    #Checks if the requested operation is in the approved list
+    if op in appr_op:
+        #If approved, matches operation with function
+        match op:
+            #Breaks loop to close calculator
+            case 'exit':
+                break
+
+            #Breaks loop to close calculator
+            case 'e':
+                break
+
+            #Prints the list of approved functions
+            case 'help':
+                print("List of Commands: {}\n" .format(appr_op))
+
+            #Performs Square Root operation outside of calculator 
+            #function since it only requires one operand
+            case 'sqrt':
+                num1 = int(input("Enter number 1\n"))
+                result = math.sqrt(num1)
+                print("The result is: {}\n" .format(result))
+
+            #Performs power operation outside of calculator 
+            #function since it requires different dialogue
+            case 'pwr':
+                num1 = int(input("Enter base\n"))
+                num2 = int(input("Enter exponent\n"))
+
+                result = calculator(op, num1, num2)
+                print("The result is: {}\n" .format(result))
+
+            #Default case for all other calculator function operations 
+            case default:
+                num1 = int(input("Enter number 1\n"))
+                num2 = int(input("Enter number 2\n"))
+
+                result = calculator(op, num1, num2)
+                print("The result is: {}\n" .format(result))            
+    else:
+        #Prints list of proper instructions in case of misinput
+        print("Please use an approved command {}\n" .format(appr_op))
