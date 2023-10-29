@@ -1,0 +1,64 @@
+#include <errno.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
+static void sig_int_handler(int sig){
+    printf("This is a signal handler!\n");
+}
+
+int main(){
+    sigset_t parentMask, childMask;
+    pid_t childPID;
+
+    //Creating an empty set
+    sigemptyset(&parentMask);
+
+    //Adding blocked signals to set
+    sigaddset(&parentMask, SIGUSR1);
+    
+    //Setting the mask for the parent function
+    sigprocmask(SIG_BLOCK, &parentMask, NULL);
+    /* if(sigprocmask(SIG_SETMASK, &parentMask, SIGUSR1) == -1){
+        //Error handler if set mask fails
+        printf("SIGINT error\n");
+        exit(-1);
+    } */
+
+    signal(SIGUSR1, sig_int_handler);
+
+    switch(childPID = fork()){
+        /*Fork Error*/
+        case -1:
+            
+            perror("fork");
+            exit(EXIT_FAILURE);
+        
+        /*Child's Code*/
+        case 0:
+            sigemptyset(&childMask);
+
+            //Wait for any signal from parent
+            sigsuspend(&childMask);
+            printf("Child received signal!\n");
+            sigprocmask(SIG_SETMASK, &parentMask, NULL);
+    /* if(sigprocmask(SIG_SETMASK, &parentMask, NULL) == -1){
+        //Error handler if set mask fails
+        printf("SIGINT error\n");
+        exit(-1);
+    } */
+
+            _exit(EXIT_SUCCESS);
+
+        /*Parent's Code*/
+        default:
+            printf("Parent started...\n");
+            sleep(3);
+            printf("Parent about to signal child...\n");
+            kill(childPID, SIGUSR1);
+            _exit(EXIT_SUCCESS);
+    }    
+
+}
