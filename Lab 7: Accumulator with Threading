@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+#Dalen Ricks
+
+import threading
+import time
+
+glist =  list(range(0,500))
+alist = [0] * 5
+max_threads = 5
+threads = []
+
+def accumulator(i: int):
+    acc = 0 
+    
+    for j in range(i*100, (i+1)*100):
+        acc += glist[j]
+
+    alist[i] = acc
+
+    tid = threading.get_native_id() # If working in the VM.
+    print(f"Accumulated value in thread [{tid} -> {i}] is {acc}")
+    
+
+
+
+def main():
+    for i in range(max_threads):
+        t = threading.Thread(target=accumulator, args=((i),))
+        t.start()
+        threads.append(t)
+
+    for t in threads:
+        t.join()
+        
+    total = alist[0]+alist[1]+alist[2]+alist[3]+alist[4]
+    print(f"Total is: {total}")
+
+
+if __name__ == "__main__":
+    main()
